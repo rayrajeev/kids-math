@@ -337,6 +337,9 @@ export function GameCompleteModal({ show, score, correctCount, totalQuestions, t
     return mins > 0 ? `${mins}m ${secs}s` : `${secs}s`;
   };
   
+  // Debug logging to see what values we're getting
+  console.log("GameComplete Modal - Score:", score, "Time:", totalTime, "Accuracy:", accuracy);
+  
   return (
     <AnimatePresence>
       {show && (
@@ -366,7 +369,7 @@ export function GameCompleteModal({ show, score, correctCount, totalQuestions, t
               <div className="grid grid-cols-3 gap-4">
                 <div>
                   <div className="text-sm opacity-80">Final Score</div>
-                  <div className="font-fredoka text-2xl">{score}</div>
+                  <div className="font-fredoka text-2xl">{score || 0}</div>
                 </div>
                 <div>
                   <div className="text-sm opacity-80">Accuracy</div>
@@ -374,7 +377,7 @@ export function GameCompleteModal({ show, score, correctCount, totalQuestions, t
                 </div>
                 <div>
                   <div className="text-sm opacity-80">Total Time</div>
-                  <div className="font-fredoka text-2xl">{formatTime(totalTime)}</div>
+                  <div className="font-fredoka text-2xl">{totalTime > 0 ? formatTime(totalTime) : "0s"}</div>
                 </div>
               </div>
               <div className="mt-4 pt-4 border-t border-white/20">

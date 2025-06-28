@@ -18,6 +18,7 @@ export default function Game() {
   const [showConfetti, setShowConfetti] = useState(false);
   const [buttonsDisabled, setButtonsDisabled] = useState(false);
   const [showGameComplete, setShowGameComplete] = useState(false);
+  const [finalGameStats, setFinalGameStats] = useState({ score: 0, correctCount: 0, totalQuestions: 0, totalTime: 0 });
 
   const handleAnswerSelect = async (selectedAnswer: number) => {
     if (buttonsDisabled || !gameState.currentQuestion) return;
@@ -56,6 +57,13 @@ export default function Game() {
         
         // Check if this was the 10th question
         if (gameState.totalQuestions >= 10) {
+          // Capture final stats before ending game
+          setFinalGameStats({
+            score: gameState.score,
+            correctCount: gameState.correctCount,
+            totalQuestions: gameState.totalQuestions,
+            totalTime: gameState.startTime ? Math.round((Date.now() - gameState.startTime) / 1000) : 0
+          });
           // End game and calculate total time
           endGame();
           setTimeout(() => {
@@ -80,6 +88,13 @@ export default function Game() {
         
         // Check if this was the 10th question
         if (gameState.totalQuestions >= 10) {
+          // Capture final stats before ending game
+          setFinalGameStats({
+            score: gameState.score,
+            correctCount: gameState.correctCount,
+            totalQuestions: gameState.totalQuestions,
+            totalTime: gameState.startTime ? Math.round((Date.now() - gameState.startTime) / 1000) : 0
+          });
           // End game and calculate total time
           endGame();
           setTimeout(() => {
@@ -92,12 +107,7 @@ export default function Game() {
     }
   }, [gameState.timeLeft, gameState.isPlaying, gameState.currentQuestion, gameState.totalQuestions, startNewQuestion]);
 
-  // Handle game completion
-  useEffect(() => {
-    if (!gameState.isPlaying && gameState.gameStarted && gameState.totalQuestions >= 10) {
-      setShowGameComplete(true);
-    }
-  }, [gameState.isPlaying, gameState.gameStarted, gameState.totalQuestions]);
+  // Handle game completion - removed automatic trigger since we handle it manually
 
   const handleRestart = () => {
     setShowGameComplete(false);
@@ -150,10 +160,10 @@ export default function Game() {
 
         <GameCompleteModal
           show={showGameComplete}
-          score={gameState.score}
-          correctCount={gameState.correctCount}
-          totalQuestions={gameState.totalQuestions}
-          totalTime={gameState.totalTime}
+          score={finalGameStats.score}
+          correctCount={finalGameStats.correctCount}
+          totalQuestions={finalGameStats.totalQuestions}
+          totalTime={finalGameStats.totalTime}
           onRestart={handleRestart}
         />
 
