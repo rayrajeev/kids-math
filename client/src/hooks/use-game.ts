@@ -186,7 +186,7 @@ export function useGame() {
   }, [startNewQuestion]);
 
   // End game
-  const endGame = useCallback(() => {
+  const endGame = useCallback((finalScore?: number, finalCorrectCount?: number) => {
     stopTimer();
     const endTime = Date.now();
     const totalTime = gameState.startTime ? Math.round((endTime - gameState.startTime) / 1000) : 0;
@@ -197,11 +197,11 @@ export function useGame() {
       totalTime: totalTime
     }));
     
-    // Save game stats
+    // Save game stats with final values
     if (gameState.totalQuestions > 0) {
       saveStatsMutation.mutate({
-        score: gameState.score,
-        correctAnswers: gameState.correctCount,
+        score: finalScore !== undefined ? finalScore : gameState.score,
+        correctAnswers: finalCorrectCount !== undefined ? finalCorrectCount : gameState.correctCount,
         totalQuestions: gameState.totalQuestions,
       });
     }

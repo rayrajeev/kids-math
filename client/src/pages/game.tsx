@@ -53,7 +53,7 @@ export default function Game() {
           };
 
           setFinalGameStats(finalStats);
-          endGame();
+          endGame(finalScore, finalCorrectCount);
           setTimeout(() => {
             setShowGameComplete(true);
           }, 500);
@@ -78,7 +78,7 @@ export default function Game() {
           };
 
           setFinalGameStats(finalStats);
-          endGame();
+          endGame(finalScore, finalCorrectCount);
           setTimeout(() => {
             setShowGameComplete(true);
           }, 500);
