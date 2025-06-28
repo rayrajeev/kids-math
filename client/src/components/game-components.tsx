@@ -9,9 +9,11 @@ interface GameHeaderProps {
   gameStarted: boolean;
   onStartGame: () => void;
   highScore: number;
+  currentLevel: number;
+  onLevelChange: (level: number) => void;
 }
 
-export function GameHeader({ gameStarted, onStartGame, highScore }: GameHeaderProps) {
+export function GameHeader({ gameStarted, onStartGame, highScore, currentLevel, onLevelChange }: GameHeaderProps) {
   return (
     <motion.div 
       className="text-center mb-8"
@@ -23,20 +25,55 @@ export function GameHeader({ gameStarted, onStartGame, highScore }: GameHeaderPr
         <Calculator className="text-sunny w-10 h-10" />
         Math Fun!
       </h1>
-      <p className="text-white/80 text-lg mb-4">Let's practice addition together!</p>
+      <p className="text-white/80 text-lg mb-4">Choose your level and practice math!</p>
       
       {!gameStarted && (
         <motion.div
           initial={{ scale: 0.9 }}
           animate={{ scale: 1 }}
           transition={{ duration: 0.3 }}
+          className="space-y-6"
         >
+          <div className="space-y-4">
+            <h2 className="text-white font-fredoka text-xl">Select Difficulty</h2>
+            <div className="flex gap-4 justify-center flex-wrap">
+              <Button
+                onClick={() => onLevelChange(1)}
+                className={`px-6 py-4 rounded-2xl transition-all duration-300 font-fredoka ${
+                  currentLevel === 1 
+                    ? "bg-sunny hover:bg-yellow-400 text-gray-800 font-bold" 
+                    : "bg-white/20 hover:bg-white/30 text-white border-white/40"
+                }`}
+              >
+                <div className="text-center">
+                  <div className="font-bold text-lg">Level 1</div>
+                  <div className="text-sm opacity-80">Single Digits (0-9)</div>
+                  <div className="text-xs">Addition & Subtraction</div>
+                </div>
+              </Button>
+              <Button
+                onClick={() => onLevelChange(2)}
+                className={`px-6 py-4 rounded-2xl transition-all duration-300 font-fredoka ${
+                  currentLevel === 2 
+                    ? "bg-sunny hover:bg-yellow-400 text-gray-800 font-bold" 
+                    : "bg-white/20 hover:bg-white/30 text-white border-white/40"
+                }`}
+              >
+                <div className="text-center">
+                  <div className="font-bold text-lg">Level 2</div>
+                  <div className="text-sm opacity-80">2-Digit + 1-Digit</div>
+                  <div className="text-xs">More Challenge!</div>
+                </div>
+              </Button>
+            </div>
+          </div>
+          
           <Button 
             onClick={onStartGame}
             className="bg-coral hover:bg-red-400 text-white font-bold py-4 px-8 rounded-2xl text-xl font-fredoka button-hover transform transition-all duration-300 hover:scale-105"
           >
             <Heart className="mr-2 w-6 h-6" />
-            Start Playing!
+            Start Level {currentLevel}!
           </Button>
           {highScore > 0 && (
             <p className="text-white/60 text-sm mt-2">
@@ -55,12 +92,13 @@ interface GameStatsProps {
   timeLeft: number;
   correctCount: number;
   totalQuestions: number;
+  currentLevel: number;
 }
 
-export function GameStats({ score, timeLeft, correctCount, totalQuestions }: GameStatsProps) {
+export function GameStats({ score, timeLeft, correctCount, totalQuestions, currentLevel }: GameStatsProps) {
   return (
     <>
-      {/* Score and Timer Container */}
+      {/* Score, Timer, and Level Container */}
       <div className="flex justify-between items-center mb-6">
         <motion.div 
           className="bg-white rounded-2xl px-6 py-3 card-shadow"
@@ -71,6 +109,19 @@ export function GameStats({ score, timeLeft, correctCount, totalQuestions }: Gam
             <Star className="text-sunny w-5 h-5" />
             <span className="font-bold text-gray-700">
               Score: <span className="text-coral">{score}</span>
+            </span>
+          </div>
+        </motion.div>
+        
+        <motion.div 
+          className="bg-white rounded-2xl px-4 py-3 card-shadow"
+          whileHover={{ scale: 1.05 }}
+          transition={{ type: "spring", stiffness: 400, damping: 10 }}
+        >
+          <div className="flex items-center space-x-2">
+            <Calculator className="text-purple-600 w-4 h-4" />
+            <span className="font-bold text-gray-700 text-sm">
+              Level {currentLevel}
             </span>
           </div>
         </motion.div>

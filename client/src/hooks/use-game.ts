@@ -14,6 +14,7 @@ export function useGame() {
     gameStarted: false,
     startTime: null,
     totalTime: 0,
+    level: 1,
   });
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -31,9 +32,9 @@ export function useGame() {
     },
   });
 
-  // Generate random math question (addition or subtraction)
-  const generateQuestion = useCallback((): Question => {
-    const isAddition = Math.random() < 0.5; // 50% chance for addition or subtraction
+  // Generate random math question based on level
+  const generateQuestion = useCallback((level: number = 1): Question => {
+    const isAddition = Math.random() < 0.5;
     
     let num1: number;
     let num2: number;
@@ -41,29 +42,52 @@ export function useGame() {
     let display: string;
     let maxWrongAnswer: number;
 
-    if (isAddition) {
-      // Addition: both numbers 0-9
-      num1 = Math.floor(Math.random() * 10);
-      num2 = Math.floor(Math.random() * 10);
-      correctAnswer = num1 + num2;
-      display = `${num1} + ${num2} = ?`;
-      maxWrongAnswer = 18; // Max possible for single digit addition
+    if (level === 1) {
+      // Level 1: Single digit (0-9)
+      if (isAddition) {
+        num1 = Math.floor(Math.random() * 10);
+        num2 = Math.floor(Math.random() * 10);
+        correctAnswer = num1 + num2;
+        display = `${num1} + ${num2} = ?`;
+        maxWrongAnswer = 18;
+      } else {
+        num1 = Math.floor(Math.random() * 10);
+        num2 = Math.floor(Math.random() * (num1 + 1));
+        correctAnswer = num1 - num2;
+        display = `${num1} - ${num2} = ?`;
+        maxWrongAnswer = 9;
+      }
     } else {
-      // Subtraction: ensure positive result by making sure num1 >= num2
-      num1 = Math.floor(Math.random() * 10); // 0-9
-      num2 = Math.floor(Math.random() * (num1 + 1)); // 0 to num1 (ensures positive result)
-      correctAnswer = num1 - num2;
-      display = `${num1} - ${num2} = ?`;
-      maxWrongAnswer = 9; // Max possible for single digit subtraction
+      // Level 2: 2-digit (10-99) + 1-digit (1-9)
+      if (isAddition) {
+        num1 = Math.floor(Math.random() * 90) + 10; // 10-99
+        num2 = Math.floor(Math.random() * 9) + 1;   // 1-9
+        correctAnswer = num1 + num2;
+        display = `${num1} + ${num2} = ?`;
+        maxWrongAnswer = 108; // 99 + 9
+      } else {
+        num1 = Math.floor(Math.random() * 90) + 10; // 10-99
+        num2 = Math.floor(Math.random() * 9) + 1;   // 1-9
+        correctAnswer = num1 - num2;
+        display = `${num1} - ${num2} = ?`;
+        maxWrongAnswer = 98; // 99 - 1
+      }
     }
     
-    // Generate wrong answer (different from correct)
+    // Generate wrong answer
     let wrongAnswer;
     do {
-      wrongAnswer = Math.floor(Math.random() * (maxWrongAnswer + 1));
+      if (level === 1) {
+        wrongAnswer = Math.floor(Math.random() * (maxWrongAnswer + 1));
+      } else {
+        // For level 2, create more realistic wrong answers
+        const offset = Math.floor(Math.random() * 20) + 1;
+        wrongAnswer = correctAnswer + (Math.random() < 0.5 ? offset : -offset);
+        if (wrongAnswer < 0) wrongAnswer = correctAnswer + offset;
+        if (wrongAnswer > maxWrongAnswer) wrongAnswer = correctAnswer - offset;
+      }
     } while (wrongAnswer === correctAnswer || wrongAnswer < 0);
 
-    // Randomly decide which position gets the correct answer
     const correctIndex = Math.random() < 0.5 ? 0 : 1;
     const options = correctIndex === 0 ? [correctAnswer, wrongAnswer] : [wrongAnswer, correctAnswer];
 
@@ -107,13 +131,15 @@ export function useGame() {
 
   // Start new question
   const startNewQuestion = useCallback(() => {
-    const newQuestion = generateQuestion();
-    setGameState(prev => ({
-      ...prev,
-      currentQuestion: newQuestion,
-      timeLeft: 5,
-      totalQuestions: prev.totalQuestions + 1,
-    }));
+    setGameState(prev => {
+      const newQuestion = generateQuestion(prev.level);
+      return {
+        ...prev,
+        currentQuestion: newQuestion,
+        timeLeft: 5,
+        totalQuestions: prev.totalQuestions + 1,
+      };
+    });
   }, [generateQuestion]);
 
   // Handle answer selection
@@ -134,6 +160,14 @@ export function useGame() {
 
     return isCorrect;
   }, [gameState.currentQuestion, stopTimer]);
+
+  // Set game level
+  const setLevel = useCallback((level: number) => {
+    setGameState(prev => ({
+      ...prev,
+      level,
+    }));
+  }, []);
 
   // Start game
   const startGame = useCallback(() => {
@@ -198,5 +232,6 @@ export function useGame() {
     endGame,
     selectAnswer,
     startNewQuestion,
+    setLevel,
   };
 }

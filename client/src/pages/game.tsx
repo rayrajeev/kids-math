@@ -12,7 +12,7 @@ import {
 } from "@/components/game-components";
 
 export default function Game() {
-  const { gameState, highScore, startGame, selectAnswer, startNewQuestion, endGame } = useGame();
+  const { gameState, highScore, startGame, selectAnswer, startNewQuestion, endGame, setLevel } = useGame();
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showWrongModal, setShowWrongModal] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
@@ -31,6 +31,9 @@ export default function Game() {
     const finalCorrectCount = gameState.correctCount + (isCorrect ? 1 : 0);
     const finalTotalTime = gameState.startTime ? Math.round((Date.now() - gameState.startTime) / 1000) : 0;
     
+    // Check if this was the 10th question before showing any modals
+    const isGameComplete = gameState.totalQuestions >= 10;
+    
     if (isCorrect) {
       setShowSuccessModal(true);
       setShowConfetti(true);
@@ -41,8 +44,7 @@ export default function Game() {
         setShowConfetti(false);
         setButtonsDisabled(false);
         
-        // Check if this was the 10th question
-        if (gameState.totalQuestions >= 10) {
+        if (isGameComplete) {
           const finalStats = {
             score: finalScore,
             correctCount: finalCorrectCount,
@@ -67,8 +69,7 @@ export default function Game() {
         setShowWrongModal(false);
         setButtonsDisabled(false);
         
-        // Check if this was the 10th question
-        if (gameState.totalQuestions >= 10) {
+        if (isGameComplete) {
           const finalStats = {
             score: finalScore,
             correctCount: finalCorrectCount,
@@ -100,11 +101,12 @@ export default function Game() {
         
         // Check if this was the 10th question
         if (gameState.totalQuestions >= 10) {
+          // Calculate final stats for timeout (no points added for wrong/timeout)
           const finalStats = {
-            score: finalScore,
-            correctCount: finalCorrectCount,
+            score: gameState.score,
+            correctCount: gameState.correctCount,
             totalQuestions: gameState.totalQuestions,
-            totalTime: finalTotalTime
+            totalTime: gameState.startTime ? Math.round((Date.now() - gameState.startTime) / 1000) : 0
           };
 
           setFinalGameStats(finalStats);
@@ -117,7 +119,7 @@ export default function Game() {
         }
       }, 2000);
     }
-  }, [gameState.timeLeft, gameState.isPlaying, gameState.currentQuestion, gameState.totalQuestions, startNewQuestion]);
+  }, [gameState.timeLeft, gameState.isPlaying, gameState.currentQuestion, gameState.totalQuestions, gameState.score, gameState.correctCount, gameState.startTime, startNewQuestion, endGame]);
 
   // Handle game completion - removed automatic trigger since we handle it manually
 
@@ -134,6 +136,8 @@ export default function Game() {
           gameStarted={gameState.gameStarted}
           onStartGame={startGame}
           highScore={highScore}
+          currentLevel={gameState.level}
+          onLevelChange={setLevel}
         />
 
         {gameState.isPlaying && (
@@ -147,6 +151,7 @@ export default function Game() {
               timeLeft={gameState.timeLeft}
               correctCount={gameState.correctCount}
               totalQuestions={gameState.totalQuestions}
+              currentLevel={gameState.level}
             />
 
             {gameState.currentQuestion && (

@@ -38,4 +38,5 @@ export interface GameState {
   gameStarted: boolean;
   startTime: number | null;
   totalTime: number;
+  level: number;
 }
