@@ -39,31 +39,23 @@ export function GameHeader({ gameStarted, onStartGame, highScore, currentLevel, 
             <div className="flex gap-4 justify-center flex-wrap">
               <Button
                 onClick={() => onLevelChange(1)}
-                className={`px-6 py-4 rounded-2xl transition-all duration-300 font-fredoka ${
+                className={`px-8 py-3 rounded-2xl transition-all duration-300 font-fredoka font-bold text-lg ${
                   currentLevel === 1 
-                    ? "bg-sunny hover:bg-yellow-400 text-gray-800 font-bold" 
+                    ? "bg-sunny hover:bg-yellow-400 text-gray-800" 
                     : "bg-white/20 hover:bg-white/30 text-white border-white/40"
                 }`}
               >
-                <div className="text-center">
-                  <div className="font-bold text-lg">Level 1</div>
-                  <div className="text-sm opacity-80">Single Digits (0-9)</div>
-                  <div className="text-xs">Addition & Subtraction</div>
-                </div>
+                Level 1
               </Button>
               <Button
                 onClick={() => onLevelChange(2)}
-                className={`px-6 py-4 rounded-2xl transition-all duration-300 font-fredoka ${
+                className={`px-8 py-3 rounded-2xl transition-all duration-300 font-fredoka font-bold text-lg ${
                   currentLevel === 2 
-                    ? "bg-sunny hover:bg-yellow-400 text-gray-800 font-bold" 
+                    ? "bg-sunny hover:bg-yellow-400 text-gray-800" 
                     : "bg-white/20 hover:bg-white/30 text-white border-white/40"
                 }`}
               >
-                <div className="text-center">
-                  <div className="font-bold text-lg">Level 2</div>
-                  <div className="text-sm opacity-80">2-Digit + 1-Digit</div>
-                  <div className="text-xs">More Challenge!</div>
-                </div>
+                Level 2
               </Button>
             </div>
           </div>
