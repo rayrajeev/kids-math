@@ -43,8 +43,7 @@ export function useGame() {
 
     // Randomly decide which position gets the correct answer
     const correctIndex = Math.random() < 0.5 ? 0 : 1;
-    const options = [wrongAnswer, wrongAnswer];
-    options[correctIndex] = correctAnswer;
+    const options = correctIndex === 0 ? [correctAnswer, wrongAnswer] : [wrongAnswer, correctAnswer];
 
     return {
       display: `${num1} + ${num2} = ?`,
@@ -169,7 +168,7 @@ export function useGame() {
 
   return {
     gameState,
-    highScore: highScoreData?.highScore || 0,
+    highScore: (highScoreData as { highScore: number } | undefined)?.highScore || 0,
     startGame,
     endGame,
     selectAnswer,
