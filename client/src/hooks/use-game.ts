@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import type { Question, GameState } from "@shared/schema";
@@ -14,7 +14,7 @@ export function useGame() {
     gameStarted: false,
   });
 
-  const [timerInterval, setTimerInterval] = useState<NodeJS.Timeout | null>(null);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Fetch high score
   const { data: highScoreData } = useQuery({
@@ -55,6 +55,34 @@ export function useGame() {
     };
   }, []);
 
+  // Start timer
+  const startTimer = useCallback(() => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+    }
+
+    timerRef.current = setInterval(() => {
+      setGameState(prev => {
+        if (prev.timeLeft <= 1) {
+          if (timerRef.current) {
+            clearInterval(timerRef.current);
+            timerRef.current = null;
+          }
+          return { ...prev, timeLeft: 0 };
+        }
+        return { ...prev, timeLeft: prev.timeLeft - 1 };
+      });
+    }, 1000);
+  }, []);
+
+  // Stop timer
+  const stopTimer = useCallback(() => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+  }, []);
+
   // Start new question
   const startNewQuestion = useCallback(() => {
     const newQuestion = generateQuestion();
@@ -66,38 +94,11 @@ export function useGame() {
     }));
   }, [generateQuestion]);
 
-  // Start timer
-  const startTimer = useCallback(() => {
-    if (timerInterval) {
-      clearInterval(timerInterval);
-    }
-
-    const interval = setInterval(() => {
-      setGameState(prev => {
-        if (prev.timeLeft <= 1) {
-          clearInterval(interval);
-          return { ...prev, timeLeft: 0 };
-        }
-        return { ...prev, timeLeft: prev.timeLeft - 1 };
-      });
-    }, 1000);
-
-    setTimerInterval(interval);
-  }, [timerInterval]);
-
-  // Stop timer
-  const stopTimer = useCallback(() => {
-    if (timerInterval) {
-      clearInterval(timerInterval);
-      setTimerInterval(null);
-    }
-  }, [timerInterval]);
-
   // Handle answer selection
   const selectAnswer = useCallback((selectedAnswer: number) => {
     stopTimer();
     
-    if (!gameState.currentQuestion) return;
+    if (!gameState.currentQuestion) return false;
 
     const isCorrect = selectedAnswer === gameState.currentQuestion.correctAnswer;
     
@@ -140,31 +141,21 @@ export function useGame() {
     }
   }, [gameState.score, gameState.correctCount, gameState.totalQuestions, stopTimer, saveStatsMutation]);
 
-  // Auto-start timer when new question is set
+  // Start timer when new question is set
   useEffect(() => {
-    if (gameState.currentQuestion && gameState.isPlaying) {
+    if (gameState.currentQuestion && gameState.isPlaying && gameState.timeLeft === 5) {
       startTimer();
     }
-  }, [gameState.currentQuestion, gameState.isPlaying, startTimer]);
-
-  // Handle timeout
-  useEffect(() => {
-    if (gameState.timeLeft === 0 && gameState.isPlaying) {
-      // Time's up - move to next question
-      setTimeout(() => {
-        startNewQuestion();
-      }, 2000);
-    }
-  }, [gameState.timeLeft, gameState.isPlaying, startNewQuestion]);
+  }, [gameState.currentQuestion, gameState.isPlaying, gameState.timeLeft, startTimer]);
 
   // Cleanup on unmount
   useEffect(() => {
     return () => {
-      if (timerInterval) {
-        clearInterval(timerInterval);
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
       }
     };
-  }, [timerInterval]);
+  }, []);
 
   return {
     gameState,
