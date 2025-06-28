@@ -1,8 +1,8 @@
-# Math Fun - Kids Addition Game
+# Math Fun - Kids Math Game
 
 ## Overview
 
-This is a kid-friendly math game focused on single-digit addition problems. The application features a React frontend with an Express.js backend, designed to provide an engaging educational experience with interactive animations, timed challenges, and score tracking.
+This is a kid-friendly math game focused on single-digit addition and subtraction problems. The application features a React frontend with an Express.js backend, designed to provide an engaging educational experience with interactive animations, timed challenges, and score tracking.
 
 ## System Architecture
 
@@ -31,7 +31,7 @@ This is a kid-friendly math game focused on single-digit addition problems. The 
 ## Key Components
 
 ### Game Logic (`/hooks/use-game.ts`)
-- Question generation for single-digit addition
+- Question generation for single-digit addition and subtraction
 - Timer management for 5-second rounds
 - Score tracking and statistics collection
 - Game state management (playing, paused, ended)
@@ -51,7 +51,7 @@ This is a kid-friendly math game focused on single-digit addition problems. The 
 ## Data Flow
 
 1. **Game Initialization**: User starts game, timer begins, first question generated
-2. **Question Display**: Random addition problem with two answer choices
+2. **Question Display**: Random addition or subtraction problem with two answer choices
 3. **Answer Selection**: User selects answer, immediate feedback provided
 4. **Score Calculation**: Points awarded for correct answers within time limit
 5. **Game End**: Statistics saved to backend, high score updated if necessary
@@ -109,6 +109,11 @@ Changelog:
   - Built score tracking and high score system
   - Added confetti animations and kid-friendly UI design
   - Fixed question display issues and timer loops
+- June 28, 2025. Enhanced math operations and UI fixes
+  - Added single-digit subtraction problems alongside addition
+  - Fixed game completion modal stats display issue
+  - Updated question generation to randomly select between addition/subtraction
+  - Ensured all subtraction problems have positive results
 ```
 
 ## User Preferences

@@ -31,24 +31,44 @@ export function useGame() {
     },
   });
 
-  // Generate random addition question
+  // Generate random math question (addition or subtraction)
   const generateQuestion = useCallback((): Question => {
-    const num1 = Math.floor(Math.random() * 10);
-    const num2 = Math.floor(Math.random() * 10);
-    const correctAnswer = num1 + num2;
+    const isAddition = Math.random() < 0.5; // 50% chance for addition or subtraction
+    
+    let num1: number;
+    let num2: number;
+    let correctAnswer: number;
+    let display: string;
+    let maxWrongAnswer: number;
+
+    if (isAddition) {
+      // Addition: both numbers 0-9
+      num1 = Math.floor(Math.random() * 10);
+      num2 = Math.floor(Math.random() * 10);
+      correctAnswer = num1 + num2;
+      display = `${num1} + ${num2} = ?`;
+      maxWrongAnswer = 18; // Max possible for single digit addition
+    } else {
+      // Subtraction: ensure positive result
+      num1 = Math.floor(Math.random() * 10); // 0-9
+      num2 = Math.floor(Math.random() * (num1 + 1)); // 0 to num1 (ensures positive result)
+      correctAnswer = num1 - num2;
+      display = `${num1} - ${num2} = ?`;
+      maxWrongAnswer = 9; // Max possible for single digit subtraction
+    }
     
     // Generate wrong answer (different from correct)
     let wrongAnswer;
     do {
-      wrongAnswer = Math.floor(Math.random() * 19); // 0-18 range for single digit addition
-    } while (wrongAnswer === correctAnswer);
+      wrongAnswer = Math.floor(Math.random() * (maxWrongAnswer + 1));
+    } while (wrongAnswer === correctAnswer || wrongAnswer < 0);
 
     // Randomly decide which position gets the correct answer
     const correctIndex = Math.random() < 0.5 ? 0 : 1;
     const options = correctIndex === 0 ? [correctAnswer, wrongAnswer] : [wrongAnswer, correctAnswer];
 
     return {
-      display: `${num1} + ${num2} = ?`,
+      display,
       num1,
       num2,
       correctAnswer,
