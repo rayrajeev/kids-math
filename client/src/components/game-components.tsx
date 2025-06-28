@@ -325,11 +325,17 @@ interface GameCompleteModalProps {
   score: number;
   correctCount: number;
   totalQuestions: number;
+  totalTime: number;
   onRestart: () => void;
 }
 
-export function GameCompleteModal({ show, score, correctCount, totalQuestions, onRestart }: GameCompleteModalProps) {
+export function GameCompleteModal({ show, score, correctCount, totalQuestions, totalTime, onRestart }: GameCompleteModalProps) {
   const accuracy = totalQuestions > 0 ? Math.round((correctCount / totalQuestions) * 100) : 0;
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return mins > 0 ? `${mins}m ${secs}s` : `${secs}s`;
+  };
   
   return (
     <AnimatePresence>
@@ -357,14 +363,18 @@ export function GameCompleteModal({ show, score, correctCount, totalQuestions, o
             <h3 className="font-fredoka text-3xl text-mint mb-4">Game Complete!</h3>
             
             <div className="bg-gradient-to-r from-turquoise to-skyblue rounded-2xl p-6 mb-6 text-white">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-3 gap-4">
                 <div>
                   <div className="text-sm opacity-80">Final Score</div>
-                  <div className="font-fredoka text-3xl">{score}</div>
+                  <div className="font-fredoka text-2xl">{score}</div>
                 </div>
                 <div>
                   <div className="text-sm opacity-80">Accuracy</div>
-                  <div className="font-fredoka text-3xl">{accuracy}%</div>
+                  <div className="font-fredoka text-2xl">{accuracy}%</div>
+                </div>
+                <div>
+                  <div className="text-sm opacity-80">Total Time</div>
+                  <div className="font-fredoka text-2xl">{formatTime(totalTime)}</div>
                 </div>
               </div>
               <div className="mt-4 pt-4 border-t border-white/20">

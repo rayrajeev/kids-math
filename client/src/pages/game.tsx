@@ -12,7 +12,7 @@ import {
 } from "@/components/game-components";
 
 export default function Game() {
-  const { gameState, highScore, startGame, selectAnswer, startNewQuestion } = useGame();
+  const { gameState, highScore, startGame, selectAnswer, startNewQuestion, endGame } = useGame();
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showWrongModal, setShowWrongModal] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
@@ -34,7 +34,17 @@ export default function Game() {
         setShowSuccessModal(false);
         setShowConfetti(false);
         setButtonsDisabled(false);
-        startNewQuestion();
+        
+        // Check if this was the 10th question
+        if (gameState.totalQuestions >= 10) {
+          // End game and calculate total time
+          endGame();
+          setTimeout(() => {
+            setShowGameComplete(true);
+          }, 500);
+        } else {
+          startNewQuestion();
+        }
       }, 2500);
     } else {
       setShowWrongModal(true);
@@ -43,7 +53,17 @@ export default function Game() {
       setTimeout(() => {
         setShowWrongModal(false);
         setButtonsDisabled(false);
-        startNewQuestion();
+        
+        // Check if this was the 10th question
+        if (gameState.totalQuestions >= 10) {
+          // End game and calculate total time
+          endGame();
+          setTimeout(() => {
+            setShowGameComplete(true);
+          }, 500);
+        } else {
+          startNewQuestion();
+        }
       }, 2500);
     }
   };
@@ -57,9 +77,20 @@ export default function Game() {
       setTimeout(() => {
         setShowWrongModal(false);
         setButtonsDisabled(false);
+        
+        // Check if this was the 10th question
+        if (gameState.totalQuestions >= 10) {
+          // End game and calculate total time
+          endGame();
+          setTimeout(() => {
+            setShowGameComplete(true);
+          }, 500);
+        } else {
+          startNewQuestion();
+        }
       }, 2000);
     }
-  }, [gameState.timeLeft, gameState.isPlaying, gameState.currentQuestion]);
+  }, [gameState.timeLeft, gameState.isPlaying, gameState.currentQuestion, gameState.totalQuestions, startNewQuestion]);
 
   // Handle game completion
   useEffect(() => {
@@ -122,6 +153,7 @@ export default function Game() {
           score={gameState.score}
           correctCount={gameState.correctCount}
           totalQuestions={gameState.totalQuestions}
+          totalTime={gameState.totalTime}
           onRestart={handleRestart}
         />
 

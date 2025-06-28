@@ -12,6 +12,8 @@ export function useGame() {
     correctCount: 0,
     totalQuestions: 0,
     gameStarted: false,
+    startTime: null,
+    totalTime: 0,
   });
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -115,6 +117,7 @@ export function useGame() {
 
   // Start game
   const startGame = useCallback(() => {
+    const now = Date.now();
     setGameState(prev => ({
       ...prev,
       isPlaying: true,
@@ -122,6 +125,8 @@ export function useGame() {
       score: 0,
       correctCount: 0,
       totalQuestions: 0,
+      startTime: now,
+      totalTime: 0,
     }));
     startNewQuestion();
   }, [startNewQuestion]);
@@ -129,7 +134,14 @@ export function useGame() {
   // End game
   const endGame = useCallback(() => {
     stopTimer();
-    setGameState(prev => ({ ...prev, isPlaying: false }));
+    const endTime = Date.now();
+    const totalTime = gameState.startTime ? Math.round((endTime - gameState.startTime) / 1000) : 0;
+    
+    setGameState(prev => ({ 
+      ...prev, 
+      isPlaying: false,
+      totalTime: totalTime
+    }));
     
     // Save game stats
     if (gameState.totalQuestions > 0) {
@@ -139,7 +151,7 @@ export function useGame() {
         totalQuestions: gameState.totalQuestions,
       });
     }
-  }, [gameState.score, gameState.correctCount, gameState.totalQuestions, stopTimer, saveStatsMutation]);
+  }, [gameState.score, gameState.correctCount, gameState.totalQuestions, gameState.startTime, stopTimer, saveStatsMutation]);
 
   // Start timer when new question is set
   useEffect(() => {
@@ -148,14 +160,7 @@ export function useGame() {
     }
   }, [gameState.currentQuestion, gameState.isPlaying, gameState.timeLeft, startTimer]);
 
-  // End game after 10 questions
-  useEffect(() => {
-    if (gameState.totalQuestions >= 10 && gameState.isPlaying) {
-      setTimeout(() => {
-        endGame();
-      }, 2000);
-    }
-  }, [gameState.totalQuestions, gameState.isPlaying, endGame]);
+  // Handle game completion manually from the component
 
   // Cleanup on unmount
   useEffect(() => {

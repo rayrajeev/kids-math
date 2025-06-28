@@ -36,4 +36,6 @@ export interface GameState {
   correctCount: number;
   totalQuestions: number;
   gameStarted: boolean;
+  startTime: number | null;
+  totalTime: number;
 }
