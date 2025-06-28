@@ -58,19 +58,19 @@ export function useGame() {
         maxWrongAnswer = 9;
       }
     } else {
-      // Level 2: 2-digit (10-99) + 1-digit (1-9)
+      // Level 2: Multiples of 10 (10, 20, 30, 40, 50) + 1-digit (1-9)
       if (isAddition) {
-        num1 = Math.floor(Math.random() * 90) + 10; // 10-99
-        num2 = Math.floor(Math.random() * 9) + 1;   // 1-9
+        num1 = (Math.floor(Math.random() * 5) + 1) * 10; // 10, 20, 30, 40, 50
+        num2 = Math.floor(Math.random() * 9) + 1;         // 1-9
         correctAnswer = num1 + num2;
         display = `${num1} + ${num2} = ?`;
-        maxWrongAnswer = 108; // 99 + 9
+        maxWrongAnswer = 59; // 50 + 9
       } else {
-        num1 = Math.floor(Math.random() * 90) + 10; // 10-99
-        num2 = Math.floor(Math.random() * 9) + 1;   // 1-9
+        num1 = (Math.floor(Math.random() * 5) + 1) * 10; // 10, 20, 30, 40, 50
+        num2 = Math.floor(Math.random() * 9) + 1;         // 1-9
         correctAnswer = num1 - num2;
         display = `${num1} - ${num2} = ?`;
-        maxWrongAnswer = 98; // 99 - 1
+        maxWrongAnswer = 49; // 50 - 1
       }
     }
     
