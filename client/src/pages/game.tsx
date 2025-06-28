@@ -26,6 +26,11 @@ export default function Game() {
     setButtonsDisabled(true);
     const isCorrect = selectAnswer(selectedAnswer);
     
+    // Calculate final stats immediately with current answer included
+    const finalScore = gameState.score + (isCorrect ? 10 : 0);
+    const finalCorrectCount = gameState.correctCount + (isCorrect ? 1 : 0);
+    const finalTotalTime = gameState.startTime ? Math.round((Date.now() - gameState.startTime) / 1000) : 0;
+    
     if (isCorrect) {
       setShowSuccessModal(true);
       setShowConfetti(true);
@@ -36,19 +41,14 @@ export default function Game() {
         setShowConfetti(false);
         setButtonsDisabled(false);
         
-        // Check if this was the 10th question - use current state after the answer was processed
+        // Check if this was the 10th question
         if (gameState.totalQuestions >= 10) {
-          // Calculate total time including the full duration of this question (5 seconds per question)
-          const baseTime = gameState.startTime ? Math.round((Date.now() - gameState.startTime) / 1000) : 0;
-          const adjustedTime = baseTime + (5 - gameState.timeLeft); // Add remaining time for this question
-          
           const finalStats = {
-            score: gameState.score,
-            correctCount: gameState.correctCount,
+            score: finalScore,
+            correctCount: finalCorrectCount,
             totalQuestions: gameState.totalQuestions,
-            totalTime: adjustedTime
+            totalTime: finalTotalTime
           };
-
 
           setFinalGameStats(finalStats);
           endGame();
@@ -67,19 +67,14 @@ export default function Game() {
         setShowWrongModal(false);
         setButtonsDisabled(false);
         
-        // Check if this was the 10th question - use current state after the answer was processed
+        // Check if this was the 10th question
         if (gameState.totalQuestions >= 10) {
-          // Calculate total time including the full duration of this question
-          const baseTime = gameState.startTime ? Math.round((Date.now() - gameState.startTime) / 1000) : 0;
-          const adjustedTime = baseTime + (5 - gameState.timeLeft); // Add remaining time for this question
-          
           const finalStats = {
-            score: gameState.score,
-            correctCount: gameState.correctCount,
+            score: finalScore,
+            correctCount: finalCorrectCount,
             totalQuestions: gameState.totalQuestions,
-            totalTime: adjustedTime
+            totalTime: finalTotalTime
           };
-
 
           setFinalGameStats(finalStats);
           endGame();
@@ -103,18 +98,14 @@ export default function Game() {
         setShowWrongModal(false);
         setButtonsDisabled(false);
         
-        // Check if this was the 10th question - use current state after the answer was processed
+        // Check if this was the 10th question
         if (gameState.totalQuestions >= 10) {
-          // For timeout, the full 5 seconds per question should be counted
-          const totalGameTime = gameState.totalQuestions * 5; // 5 seconds per question for timeouts
-          
           const finalStats = {
-            score: gameState.score,
-            correctCount: gameState.correctCount,
+            score: finalScore,
+            correctCount: finalCorrectCount,
             totalQuestions: gameState.totalQuestions,
-            totalTime: totalGameTime
+            totalTime: finalTotalTime
           };
-
 
           setFinalGameStats(finalStats);
           endGame();
