@@ -337,7 +337,7 @@ export function GameCompleteModal({ show, score, correctCount, totalQuestions, t
     return mins > 0 ? `${mins}m ${secs}s` : `${secs}s`;
   };
   
-  console.log("GameComplete Modal - Score:", score, "Time:", totalTime, "Accuracy:", accuracy);
+
   
   // Only show modal content if we have valid stats
   if (!show) return null;

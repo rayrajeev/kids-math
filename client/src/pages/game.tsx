@@ -38,15 +38,18 @@ export default function Game() {
         
         // Check if this was the 10th question - use current state after the answer was processed
         if (gameState.totalQuestions >= 10) {
-          // Capture final stats after answer was processed
+          // Calculate total time including the full duration of this question (5 seconds per question)
+          const baseTime = gameState.startTime ? Math.round((Date.now() - gameState.startTime) / 1000) : 0;
+          const adjustedTime = baseTime + (5 - gameState.timeLeft); // Add remaining time for this question
+          
           const finalStats = {
             score: gameState.score,
             correctCount: gameState.correctCount,
             totalQuestions: gameState.totalQuestions,
-            totalTime: gameState.startTime ? Math.round((Date.now() - gameState.startTime) / 1000) : 0
+            totalTime: adjustedTime
           };
 
-          console.log("Game complete after correct - Final stats:", finalStats);
+
           setFinalGameStats(finalStats);
           endGame();
           setTimeout(() => {
@@ -66,15 +69,18 @@ export default function Game() {
         
         // Check if this was the 10th question - use current state after the answer was processed
         if (gameState.totalQuestions >= 10) {
-          // Capture final stats after answer was processed
+          // Calculate total time including the full duration of this question
+          const baseTime = gameState.startTime ? Math.round((Date.now() - gameState.startTime) / 1000) : 0;
+          const adjustedTime = baseTime + (5 - gameState.timeLeft); // Add remaining time for this question
+          
           const finalStats = {
             score: gameState.score,
             correctCount: gameState.correctCount,
             totalQuestions: gameState.totalQuestions,
-            totalTime: gameState.startTime ? Math.round((Date.now() - gameState.startTime) / 1000) : 0
+            totalTime: adjustedTime
           };
 
-          console.log("Game complete after wrong - Final stats:", finalStats);
+
           setFinalGameStats(finalStats);
           endGame();
           setTimeout(() => {
@@ -99,15 +105,17 @@ export default function Game() {
         
         // Check if this was the 10th question - use current state after the answer was processed
         if (gameState.totalQuestions >= 10) {
-          // Capture final stats after answer was processed
+          // For timeout, the full 5 seconds per question should be counted
+          const totalGameTime = gameState.totalQuestions * 5; // 5 seconds per question for timeouts
+          
           const finalStats = {
             score: gameState.score,
             correctCount: gameState.correctCount,
             totalQuestions: gameState.totalQuestions,
-            totalTime: gameState.startTime ? Math.round((Date.now() - gameState.startTime) / 1000) : 0
+            totalTime: totalGameTime
           };
 
-          console.log("Game complete after timeout - Final stats:", finalStats);
+
           setFinalGameStats(finalStats);
           endGame();
           setTimeout(() => {

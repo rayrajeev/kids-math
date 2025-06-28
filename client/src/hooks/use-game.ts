@@ -67,7 +67,7 @@ export function useGame() {
     const correctIndex = Math.random() < 0.5 ? 0 : 1;
     const options = correctIndex === 0 ? [correctAnswer, wrongAnswer] : [wrongAnswer, correctAnswer];
 
-    const question = {
+    return {
       display,
       num1,
       num2,
@@ -75,9 +75,6 @@ export function useGame() {
       options,
       correctIndex,
     };
-
-    console.log("Generated question:", question);
-    return question;
   }, []);
 
   // Start timer
