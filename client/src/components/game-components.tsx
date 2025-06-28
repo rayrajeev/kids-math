@@ -337,6 +337,9 @@ export function GameCompleteModal({ show, score, correctCount, totalQuestions, t
     return mins > 0 ? `${mins}m ${secs}s` : `${secs}s`;
   };
   
+  // Only show modal content if we have valid stats
+  if (!show || totalQuestions === 0) return null;
+  
 
   
   return (

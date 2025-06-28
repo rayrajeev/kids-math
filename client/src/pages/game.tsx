@@ -172,11 +172,11 @@ export default function Game() {
         />
 
         <GameCompleteModal
-          show={showGameComplete && finalGameStats.totalQuestions > 0}
-          score={finalGameStats.score}
-          correctCount={finalGameStats.correctCount}
-          totalQuestions={finalGameStats.totalQuestions}
-          totalTime={finalGameStats.totalTime}
+          show={showGameComplete}
+          score={finalGameStats.totalQuestions > 0 ? finalGameStats.score : 0}
+          correctCount={finalGameStats.totalQuestions > 0 ? finalGameStats.correctCount : 0}
+          totalQuestions={finalGameStats.totalQuestions > 0 ? finalGameStats.totalQuestions : 10}
+          totalTime={finalGameStats.totalQuestions > 0 ? finalGameStats.totalTime : 0}
           onRestart={handleRestart}
         />
 
