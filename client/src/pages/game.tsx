@@ -38,6 +38,15 @@ export default function Game() {
         
         // Check if this was the 10th question
         if (gameState.totalQuestions >= 10) {
+          // Capture final stats before ending game
+          const finalStats = {
+            score: gameState.score,
+            correctCount: gameState.correctCount,
+            totalQuestions: gameState.totalQuestions,
+            totalTime: gameState.startTime ? Math.round((Date.now() - gameState.startTime) / 1000) : 0
+          };
+          console.log("Correct answer - Capturing final stats:", finalStats, "gameState:", gameState);
+          setFinalGameStats(finalStats);
           // End game and calculate total time
           endGame();
           setTimeout(() => {
@@ -58,12 +67,14 @@ export default function Game() {
         // Check if this was the 10th question
         if (gameState.totalQuestions >= 10) {
           // Capture final stats before ending game
-          setFinalGameStats({
+          const finalStats = {
             score: gameState.score,
             correctCount: gameState.correctCount,
             totalQuestions: gameState.totalQuestions,
             totalTime: gameState.startTime ? Math.round((Date.now() - gameState.startTime) / 1000) : 0
-          });
+          };
+          console.log("Wrong answer - Capturing final stats:", finalStats, "gameState:", gameState);
+          setFinalGameStats(finalStats);
           // End game and calculate total time
           endGame();
           setTimeout(() => {
@@ -89,12 +100,14 @@ export default function Game() {
         // Check if this was the 10th question
         if (gameState.totalQuestions >= 10) {
           // Capture final stats before ending game
-          setFinalGameStats({
+          const finalStats = {
             score: gameState.score,
             correctCount: gameState.correctCount,
             totalQuestions: gameState.totalQuestions,
             totalTime: gameState.startTime ? Math.round((Date.now() - gameState.startTime) / 1000) : 0
-          });
+          };
+          console.log("Timeout - Capturing final stats:", finalStats, "gameState:", gameState);
+          setFinalGameStats(finalStats);
           // End game and calculate total time
           endGame();
           setTimeout(() => {
