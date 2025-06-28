@@ -7,7 +7,8 @@ import {
   QuestionCard, 
   SuccessModal, 
   WrongModal, 
-  Confetti 
+  Confetti,
+  GameCompleteModal
 } from "@/components/game-components";
 
 export default function Game() {
@@ -16,6 +17,7 @@ export default function Game() {
   const [showWrongModal, setShowWrongModal] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
   const [buttonsDisabled, setButtonsDisabled] = useState(false);
+  const [showGameComplete, setShowGameComplete] = useState(false);
 
   const handleAnswerSelect = async (selectedAnswer: number) => {
     if (buttonsDisabled || !gameState.currentQuestion) return;
@@ -59,6 +61,18 @@ export default function Game() {
     }
   }, [gameState.timeLeft, gameState.isPlaying, gameState.currentQuestion]);
 
+  // Handle game completion
+  useEffect(() => {
+    if (!gameState.isPlaying && gameState.gameStarted && gameState.totalQuestions >= 10) {
+      setShowGameComplete(true);
+    }
+  }, [gameState.isPlaying, gameState.gameStarted, gameState.totalQuestions]);
+
+  const handleRestart = () => {
+    setShowGameComplete(false);
+    startGame();
+  };
+
   return (
     <div className="gradient-bg min-h-screen font-opensans">
       <div className="container mx-auto px-4 py-6 max-w-lg">
@@ -83,16 +97,11 @@ export default function Game() {
             />
 
             {gameState.currentQuestion && (
-              <>
-                <div className="text-white mb-4 p-4 bg-black/20 rounded">
-                  Debug: {JSON.stringify(gameState.currentQuestion)}
-                </div>
-                <QuestionCard
-                  question={gameState.currentQuestion}
-                  onAnswerSelect={handleAnswerSelect}
-                  disabled={buttonsDisabled}
-                />
-              </>
+              <QuestionCard
+                question={gameState.currentQuestion}
+                onAnswerSelect={handleAnswerSelect}
+                disabled={buttonsDisabled}
+              />
             )}
           </motion.div>
         )}
@@ -106,6 +115,14 @@ export default function Game() {
           show={showWrongModal}
           correctAnswer={gameState.currentQuestion?.correctAnswer || 0}
           onClose={() => setShowWrongModal(false)}
+        />
+
+        <GameCompleteModal
+          show={showGameComplete}
+          score={gameState.score}
+          correctCount={gameState.correctCount}
+          totalQuestions={gameState.totalQuestions}
+          onRestart={handleRestart}
         />
 
         <Confetti show={showConfetti} />

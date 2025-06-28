@@ -86,7 +86,6 @@ export function useGame() {
   // Start new question
   const startNewQuestion = useCallback(() => {
     const newQuestion = generateQuestion();
-    console.log("Generated question:", newQuestion);
     setGameState(prev => ({
       ...prev,
       currentQuestion: newQuestion,
@@ -148,6 +147,15 @@ export function useGame() {
       startTimer();
     }
   }, [gameState.currentQuestion, gameState.isPlaying, gameState.timeLeft, startTimer]);
+
+  // End game after 10 questions
+  useEffect(() => {
+    if (gameState.totalQuestions >= 10 && gameState.isPlaying) {
+      setTimeout(() => {
+        endGame();
+      }, 2000);
+    }
+  }, [gameState.totalQuestions, gameState.isPlaying, endGame]);
 
   // Cleanup on unmount
   useEffect(() => {

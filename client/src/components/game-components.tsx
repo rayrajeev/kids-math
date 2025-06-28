@@ -319,3 +319,71 @@ export function Confetti({ show }: ConfettiProps) {
     </AnimatePresence>
   );
 }
+
+interface GameCompleteModalProps {
+  show: boolean;
+  score: number;
+  correctCount: number;
+  totalQuestions: number;
+  onRestart: () => void;
+}
+
+export function GameCompleteModal({ show, score, correctCount, totalQuestions, onRestart }: GameCompleteModalProps) {
+  const accuracy = totalQuestions > 0 ? Math.round((correctCount / totalQuestions) * 100) : 0;
+  
+  return (
+    <AnimatePresence>
+      {show && (
+        <motion.div
+          className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+        >
+          <motion.div
+            className="bg-white rounded-3xl p-8 m-4 max-w-md w-full text-center"
+            initial={{ scale: 0.5, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.5, opacity: 0 }}
+            transition={{ type: "spring", stiffness: 300, damping: 20 }}
+          >
+            <motion.div 
+              className="text-6xl mb-4"
+              animate={{ rotate: [0, 10, -10, 0] }}
+              transition={{ duration: 0.5, repeat: 2 }}
+            >
+              🎉
+            </motion.div>
+            <h3 className="font-fredoka text-3xl text-mint mb-4">Game Complete!</h3>
+            
+            <div className="bg-gradient-to-r from-turquoise to-skyblue rounded-2xl p-6 mb-6 text-white">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <div className="text-sm opacity-80">Final Score</div>
+                  <div className="font-fredoka text-3xl">{score}</div>
+                </div>
+                <div>
+                  <div className="text-sm opacity-80">Accuracy</div>
+                  <div className="font-fredoka text-3xl">{accuracy}%</div>
+                </div>
+              </div>
+              <div className="mt-4 pt-4 border-t border-white/20">
+                <div className="text-sm opacity-80">
+                  You got {correctCount} out of {totalQuestions} questions correct!
+                </div>
+              </div>
+            </div>
+            
+            <Button
+              onClick={onRestart}
+              className="bg-coral hover:bg-red-400 text-white font-bold py-4 px-8 rounded-2xl text-xl font-fredoka button-hover w-full"
+            >
+              <Heart className="mr-2 w-6 h-6" />
+              Play Again!
+            </Button>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
