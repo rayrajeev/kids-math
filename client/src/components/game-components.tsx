@@ -337,8 +337,7 @@ export function GameCompleteModal({ show, score, correctCount, totalQuestions, t
     return mins > 0 ? `${mins}m ${secs}s` : `${secs}s`;
   };
   
-  // Debug logging to see what values we're getting
-  console.log("GameComplete Modal - Score:", score, "Time:", totalTime, "Accuracy:", accuracy);
+
   
   return (
     <AnimatePresence>

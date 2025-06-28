@@ -45,7 +45,7 @@ export default function Game() {
             totalQuestions: gameState.totalQuestions,
             totalTime: gameState.startTime ? Math.round((Date.now() - gameState.startTime) / 1000) : 0
           };
-          console.log("Correct answer - Capturing final stats:", finalStats, "gameState:", gameState);
+
           setFinalGameStats(finalStats);
           // End game and calculate total time
           endGame();
@@ -73,7 +73,7 @@ export default function Game() {
             totalQuestions: gameState.totalQuestions,
             totalTime: gameState.startTime ? Math.round((Date.now() - gameState.startTime) / 1000) : 0
           };
-          console.log("Wrong answer - Capturing final stats:", finalStats, "gameState:", gameState);
+
           setFinalGameStats(finalStats);
           // End game and calculate total time
           endGame();
@@ -106,7 +106,7 @@ export default function Game() {
             totalQuestions: gameState.totalQuestions,
             totalTime: gameState.startTime ? Math.round((Date.now() - gameState.startTime) / 1000) : 0
           };
-          console.log("Timeout - Capturing final stats:", finalStats, "gameState:", gameState);
+
           setFinalGameStats(finalStats);
           // End game and calculate total time
           endGame();
@@ -172,7 +172,7 @@ export default function Game() {
         />
 
         <GameCompleteModal
-          show={showGameComplete}
+          show={showGameComplete && finalGameStats.totalQuestions > 0}
           score={finalGameStats.score}
           correctCount={finalGameStats.correctCount}
           totalQuestions={finalGameStats.totalQuestions}
