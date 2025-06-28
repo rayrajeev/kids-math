@@ -369,7 +369,7 @@ export function GameCompleteModal({ show, score, correctCount, totalQuestions, t
             </motion.div>
             <h3 className="font-fredoka text-3xl text-mint mb-4">Game Complete!</h3>
             
-            <div className="bg-gradient-to-r from-turquoise to-skyblue rounded-2xl p-6 mb-6 text-white">
+            <div className="bg-gradient-to-r from-cyan-400 to-blue-500 rounded-2xl p-6 mb-6 text-white">
               <div className="grid grid-cols-3 gap-4">
                 <div>
                   <div className="text-sm opacity-80">Final Score</div>
