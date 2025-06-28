@@ -36,9 +36,9 @@ export default function Game() {
         setShowConfetti(false);
         setButtonsDisabled(false);
         
-        // Check if this was the 10th question
+        // Check if this was the 10th question - use current state after the answer was processed
         if (gameState.totalQuestions >= 10) {
-          // Capture final stats before ending game
+          // Capture final stats after answer was processed
           const finalStats = {
             score: gameState.score,
             correctCount: gameState.correctCount,
@@ -46,8 +46,8 @@ export default function Game() {
             totalTime: gameState.startTime ? Math.round((Date.now() - gameState.startTime) / 1000) : 0
           };
 
+          console.log("Game complete after correct - Final stats:", finalStats);
           setFinalGameStats(finalStats);
-          // End game and calculate total time
           endGame();
           setTimeout(() => {
             setShowGameComplete(true);
@@ -64,9 +64,9 @@ export default function Game() {
         setShowWrongModal(false);
         setButtonsDisabled(false);
         
-        // Check if this was the 10th question
+        // Check if this was the 10th question - use current state after the answer was processed
         if (gameState.totalQuestions >= 10) {
-          // Capture final stats before ending game
+          // Capture final stats after answer was processed
           const finalStats = {
             score: gameState.score,
             correctCount: gameState.correctCount,
@@ -74,8 +74,8 @@ export default function Game() {
             totalTime: gameState.startTime ? Math.round((Date.now() - gameState.startTime) / 1000) : 0
           };
 
+          console.log("Game complete after wrong - Final stats:", finalStats);
           setFinalGameStats(finalStats);
-          // End game and calculate total time
           endGame();
           setTimeout(() => {
             setShowGameComplete(true);
@@ -97,9 +97,9 @@ export default function Game() {
         setShowWrongModal(false);
         setButtonsDisabled(false);
         
-        // Check if this was the 10th question
+        // Check if this was the 10th question - use current state after the answer was processed
         if (gameState.totalQuestions >= 10) {
-          // Capture final stats before ending game
+          // Capture final stats after answer was processed
           const finalStats = {
             score: gameState.score,
             correctCount: gameState.correctCount,
@@ -107,8 +107,8 @@ export default function Game() {
             totalTime: gameState.startTime ? Math.round((Date.now() - gameState.startTime) / 1000) : 0
           };
 
+          console.log("Game complete after timeout - Final stats:", finalStats);
           setFinalGameStats(finalStats);
-          // End game and calculate total time
           endGame();
           setTimeout(() => {
             setShowGameComplete(true);
