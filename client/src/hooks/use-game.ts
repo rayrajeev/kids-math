@@ -49,7 +49,7 @@ export function useGame() {
       display = `${num1} + ${num2} = ?`;
       maxWrongAnswer = 18; // Max possible for single digit addition
     } else {
-      // Subtraction: ensure positive result
+      // Subtraction: ensure positive result by making sure num1 >= num2
       num1 = Math.floor(Math.random() * 10); // 0-9
       num2 = Math.floor(Math.random() * (num1 + 1)); // 0 to num1 (ensures positive result)
       correctAnswer = num1 - num2;
@@ -67,7 +67,7 @@ export function useGame() {
     const correctIndex = Math.random() < 0.5 ? 0 : 1;
     const options = correctIndex === 0 ? [correctAnswer, wrongAnswer] : [wrongAnswer, correctAnswer];
 
-    return {
+    const question = {
       display,
       num1,
       num2,
@@ -75,6 +75,9 @@ export function useGame() {
       options,
       correctIndex,
     };
+
+    console.log("Generated question:", question);
+    return question;
   }, []);
 
   // Start timer
