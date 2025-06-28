@@ -148,7 +148,7 @@ export function QuestionCard({ question, onAnswerSelect, disabled }: QuestionCar
             transition={{ type: "spring", stiffness: 400, damping: 10 }}
           >
             <div className="font-fredoka text-5xl text-white">
-              {question.display}
+              {question.display || `${question.num1} + ${question.num2} = ?`}
             </div>
           </motion.div>
           

@@ -83,11 +83,16 @@ export default function Game() {
             />
 
             {gameState.currentQuestion && (
-              <QuestionCard
-                question={gameState.currentQuestion}
-                onAnswerSelect={handleAnswerSelect}
-                disabled={buttonsDisabled}
-              />
+              <>
+                <div className="text-white mb-4 p-4 bg-black/20 rounded">
+                  Debug: {JSON.stringify(gameState.currentQuestion)}
+                </div>
+                <QuestionCard
+                  question={gameState.currentQuestion}
+                  onAnswerSelect={handleAnswerSelect}
+                  disabled={buttonsDisabled}
+                />
+              </>
             )}
           </motion.div>
         )}
