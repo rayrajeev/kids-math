@@ -143,12 +143,12 @@ export function QuestionCard({ question, onAnswerSelect, disabled }: QuestionCar
           <h2 className="font-fredoka text-2xl text-gray-600 mb-4">What is the answer?</h2>
           
           <motion.div 
-            className="bg-gradient-to-r from-turquoise to-skyblue rounded-2xl p-6 mb-6"
+            className="bg-white border-4 border-blue-500 rounded-2xl p-8 mb-6 shadow-lg"
             whileHover={{ scale: 1.02 }}
             transition={{ type: "spring", stiffness: 400, damping: 10 }}
           >
-            <div className="font-fredoka text-5xl text-white">
-              {question.display || `${question.num1} + ${question.num2} = ?`}
+            <div className="font-fredoka text-6xl text-gray-800 font-bold">
+              {question.num1} + {question.num2} = ?
             </div>
           </motion.div>
           

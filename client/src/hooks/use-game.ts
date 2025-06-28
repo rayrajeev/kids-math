@@ -86,6 +86,7 @@ export function useGame() {
   // Start new question
   const startNewQuestion = useCallback(() => {
     const newQuestion = generateQuestion();
+    console.log("Generated question:", newQuestion);
     setGameState(prev => ({
       ...prev,
       currentQuestion: newQuestion,
